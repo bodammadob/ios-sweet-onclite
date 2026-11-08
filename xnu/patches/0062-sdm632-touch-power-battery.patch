@@ -1,0 +1,88 @@
+diff --git a/iokit/Kernel/arm/SWEETTouchPower.cpp b/iokit/Kernel/arm/SWEETTouchPower.cpp
+--- /dev/null
++++ b/iokit/Kernel/arm/SWEETTouchPower.cpp
+new file mode 100644
+@@ -0,0 +1,40 @@
++/*
++ * SWEET touch power driver for Redmi Note 10 Pro (SDM732G).
++ * For SDM632 (onclite), this needs to be adapted for PMIC8950.
++ */
++
++#include <pexpert/arm64/board_config.h>
++
++#if defined(SWEET)
++#include <IOKit/I2C/IOI2CDevice.h>
++#include <IOKit/I2C/IOI2CClient.h>
++
++class SweetTouchPower : public IOService {
++	OSDeclareDefaultStructors(SweetTouchPower);
++
++public:
++	virtual bool init(OSDictionary *dictionary) APPLE_KEXT_OVERRIDE;
++	virtual bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++	virtual void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
++};
++
++OSDefineMetaClassAndStructors(SweetTouchPower, IOService);
++
++bool SweetTouchPower::init(OSDictionary *dictionary) {
++	if (!super::init(dictionary)) return false;
++	return true;
++}
++
++bool SweetTouchPower::start(IOService *provider) {
++	if (!super::start(provider)) return false;
++	registerService();
++	return true;
++}
++
++void SweetTouchPower::stop(IOService *provider) {
++	super::stop(provider);
++}
++
++OSDefineMetaClassAndStructors(SweetTouchPower, IOService);
++#endif /* SWEET */
+diff --git a/iokit/Kernel/arm/OncliteTouchPower.cpp b/iokit/Kernel/arm/OncliteTouchPower.cpp
+new file mode 100644
+--- /dev/null
++++ b/iokit/Kernel/arm/OncliteTouchPower.cpp
+@@ -0,0 +1,40 @@
++/*
++ * ONCLITE touch power driver for PMIC8950 (SDM632).
++ * Placeholder - needs full touch power driver implementation.
++ */
++
++#include <pexpert/arm64/board_config.h>
++
++#if defined(ONCLITE)
++#include <IOKit/I2C/IOI2CDevice.h>
++#include <IOKit/I2C/IOI2CClient.h>
++
++class OncliteTouchPower : public IOService {
++	OSDeclareDefaultStructors(OncliteTouchPower);
++
++public:
++	virtual bool init(OSDictionary *dictionary) APPLE_KEXT_OVERRIDE;
++	virtual bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++	virtual void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
++};
++
++OSDefineMetaClassAndStructors(OncliteTouchPower, IOService);
++
++bool OncliteTouchPower::init(OSDictionary *dictionary) {
++	if (!super::init(dictionary)) return false;
++	return true;
++}
++
++bool OncliteTouchPower::start(IOService *provider) {
++	if (!super::start(provider)) return false;
++	registerService();
++	return true;
++}
++
++void OncliteTouchPower::stop(IOService *provider) {
++	super::stop(provider);
++}
++
++OSDefineMetaClassAndStructors(OncliteTouchPower, IOService);
++#endif /* ONCLITE */

@@ -1,0 +1,14 @@
+diff --git a/osfmk/arm64/machine_cpu.c b/osfmk/arm64/machine_cpu.c
+--- a/osfmk/arm64/machine_cpu.c
++++ b/osfmk/arm64/machine_cpu.c
+@@ -100,6 +213,7 @@
+ 	 */
+ 	psci_cpu_on(1);
+ 
++#if defined(ONCLITE)
+ 	/* SDM632 has 8 cores (4x Kryo 250 Gold + 4x Kryo 250 Silver), all via PSCI */
++#endif
+ 	for (cpu = 1; cpu < cpu_count; cpu++) {
+ 		cpu_start_secondary_cpu(cpu);
+ 	}
+ }

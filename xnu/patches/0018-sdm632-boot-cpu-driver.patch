@@ -1,0 +1,25 @@
+diff --git a/pexpert/arm64/boot.c b/pexpert/arm64/boot.c
+--- a/pexpert/arm64/boot.c
++++ b/pexpert/arm64/boot.c
+@@ -213,6 +213,7 @@ extern "C" void cpu_start(void)
+ 	arm_vm_bootstrap(PE_state->kernel_load_addr);
+ 
++#if defined(ONCLITE)
+ 	/* Enable all 8 cores (4x Kryo 250 Gold + 4x Kryo 250 Silver) */
++#endif
+ 	/* Enable all cores */
+ 	cpu_start_primary();
+ 	cpu_start_secondary();
+ 
+ 	/* Enable the CPU */
+ 	cpu_enable();
+@@ -270,6 +271,7 @@ cpu_start_secondary(void)
+ 	}
+ 
++#if defined(ONCLITE)
+ 	/* Redmi 7 uses 8 A53 cores, all need to be started via PSCI */
++#endif
+ 	for (cpu = 0; cpu < cpu_count; cpu++) {
+ 		cpu_start_secondary_cpu(cpu);
+ 	}
+ }

@@ -1,0 +1,89 @@
+diff --git a/iokit/Kernel/arm/SWEETTouch.cpp b/iokit/Kernel/arm/SWEETTouch.cpp
+--- /dev/null
++++ b/iokit/Kernel/arm/SWEETTouch.cpp
+new file mode 100644
+@@ -0,0 +1,40 @@
++/*
++ * SWEET touch driver for Goodix GT9896 on I2C3 (SDM732G).
++ * For SDM632 (onclite), this needs to be adapted for Focaltech FTS on I2C3.
++ * See docs/HARDWARE.md for touch controller details.
++ */
++
++#include <pexpert/arm64/board_config.h>
++
++#if defined(SWEET)
++#include <IOKit/I2C/IOI2CDevice.h>
++#include <IOKit/I2C/IOI2CClient.h>
++
++class SweetTouch : public IOService {
++	OSDeclareDefaultStructors(SweetTouch);
++
++public:
++	virtual bool init(OSDictionary *dictionary) APPLE_KEXT_OVERRIDE;
++	virtual bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++	virtual void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
++};
++
++OSDefineMetaClassAndStructors(SweetTouch, IOService);
++
++bool SweetTouch::init(OSDictionary *dictionary) {
++	if (!super::init(dictionary)) return false;
++	return true;
++}
++
++bool SweetTouch::start(IOService *provider) {
++	if (!super::start(provider)) return false;
++	registerService();
++	return true;
++}
++
++void SweetTouch::stop(IOService *provider) {
++	super::stop(provider);
++}
++
++OSDefineMetaClassAndStructors(SweetTouch, IOService);
++#endif /* SWEET */
+diff --git a/iokit/Kernel/arm/OncliteTouch.cpp b/iokit/Kernel/arm/OncliteTouch.cpp
+new file mode 100644
+--- /dev/null
++++ b/iokit/Kernel/arm/OncliteTouch.cpp
+@@ -0,0 +1,40 @@
++/*
++ * ONCLITE touch driver for Focaltech FTS on I2C3 (SDM632).
++ * Placeholder - needs full touch driver implementation.
++ */
++
++#include <pexpert/arm64/board_config.h>
++
++#if defined(ONCLITE)
++#include <IOKit/I2C/IOI2CDevice.h>
++#include <IOKit/I2C/IOI2CClient.h>
++
++class OncliteTouch : public IOService {
++	OSDeclareDefaultStructors(OncliteTouch);
++
++public:
++	virtual bool init(OSDictionary *dictionary) APPLE_KEXT_OVERRIDE;
++	virtual bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++	virtual void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
++};
++
++OSDefineMetaClassAndStructors(OncliteTouch, IOService);
++
++bool OncliteTouch::init(OSDictionary *dictionary) {
++	if (!super::init(dictionary)) return false;
++	return true;
++}
++
++bool OncliteTouch::start(IOService *provider) {
++	if (!super::start(provider)) return false;
++	registerService();
++	return true;
++}
++
++void OncliteTouch::stop(IOService *provider) {
++	super::stop(provider);
++}
++
++OSDefineMetaClassAndStructors(OncliteTouch, IOService);
++#endif /* ONCLITE */

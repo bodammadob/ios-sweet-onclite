@@ -1,0 +1,147 @@
+diff --git a/iokit/Kernel/arm/SWEETStorage.cpp b/iokit/Kernel/arm/SWEETStorage.cpp
+--- /dev/null
++++ b/iokit/Kernel/arm/SWEETStorage.cpp
+new file mode 100644
+@@ -0,0 +1,50 @@
++/*
++ * SWEET storage driver for Qualcomm SDM732G UFS controller.
++ * For SDM632 (onclite), this needs to be replaced with an eMMC driver.
++ * See docs/HARDWARE.md in the port project for eMMC controller details.
++ */
++
++#include <pexpert/arm64/board_config.h>
++
++#if defined(SWEET)
++#include <IOKit/IOMemoryDescriptor.h>
++#include <IOKit/IOMemoryDescriptor.h>
++#include <IOKit/IOMemoryDescriptor.h>
++
++class SweetStorage : public IOStorage {
++	OSDeclareDefaultStructors(SweetStorage);
++
++public:
++	virtual bool init(OSDictionary *dictionary) APPLE_KEXT_OVERRIDE;
++	virtual bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++	virtual void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
++
++	virtual bool read(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) APPLE_KEXT_OVERRIDE;
++	virtual bool write(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) APPLE_KEXT_OVERRIDE;
++	virtual void getCapabilities(IOStorage::Capabilities &caps) APPLE_KEXT_OVERRIDE;
++};
++
++OSDefineMetaClassAndStructors(SweetStorage, IOStorage);
++
++bool SweetStorage::init(OSDictionary *dictionary) {
++	if (!super::init(dictionary)) return false;
++	return true;
++}
++
++bool SweetStorage::start(IOService *provider) {
++	if (!super::start(provider)) return false;
++	registerService();
++	return true;
++}
++
++void SweetStorage::stop(IOService *provider) {
++	super::stop(provider);
++}
++
++bool SweetStorage::read(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) {
++	// TODO: Implement UFS read
++	return false;
++}
++
++bool SweetStorage::write(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) {
++	// TODO: Implement UFS write
++	return false;
++}
++
++void SweetStorage::getCapabilities(IOStorage::Capabilities &caps) {
++	memset(&caps, 0, sizeof(caps));
++	caps.version = kIOStorageCapabilitiesVersion1;
++	caps.read = 1;
++	caps.write = 1;
++	caps.totalBytes = 32ULL * 1024 * 1024 * 1024; // 32GB eMMC
++	caps.blockSize = 512;
++	caps.optimalIOSize = 4096;
++}
++
++OSDefineMetaClassAndStructors(SweetStorage, IOStorage);
++#endif /* SWEET */
+diff --git a/iokit/conf/files.arm64 b/iokit/conf/files.arm64
+index c40d57b..b0dad49 100644
+--- a/iokit/conf/files.arm64
++++ b/iokit/conf/files.arm64
+@@ -10,3 +5,6 @@
+ ioKit/Kernel/arm/SweetStorage.cpp
++# SWEET storage driver (empty translation unit on other boards)
++iokit/Kernel/arm/SweetStorage.cpp                         optional iokitcpp
+diff --git a/iokit/Kernel/arm/OncliteStorage.cpp b/iokit/Kernel/arm/OncliteStorage.cpp
+new file mode 100644
+--- /dev/null
++++ b/iokit/Kernel/arm/OncliteStorage.cpp
+@@ -0,0 +1,50 @@
++/*
++ * ONCLITE storage driver for Qualcomm SDM632 eMMC controller.
++ * Placeholder - needs full eMMC driver implementation.
++ */
++
++#include <pexpert/arm64/board_config.h>
++
++#if defined(ONCLITE)
++#include <IOKit/IOMemoryDescriptor.h>
++#include <IOKit/IOMemoryDescriptor.h>
++#include <IOKit/IOMemoryDescriptor.h>
++
++class OncliteStorage : public IOStorage {
++	OSDeclareDefaultStructors(OncliteStorage);
++
++public:
++	virtual bool init(OSDictionary *dictionary) APPLE_KEXT_OVERRIDE;
++	virtual bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++	virtual void stop(IOService *provider) APPLE_KEXT_OVERRIDE;
++
++	virtual bool read(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) APPLE_KEXT_OVERRIDE;
++	virtual bool write(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) APPLE_KEXT_OVERRIDE;
++	virtual void getCapabilities(IOStorage::Capabilities &caps) APPLE_KEXT_OVERRIDE;
++};
++
++OSDefineMetaClassAndStructors(OncliteStorage, IOStorage);
++
++bool OncliteStorage::init(OSDictionary *dictionary) {
++	if (!super::init(dictionary)) return false;
++	return true;
++}
++
++bool OncliteStorage::start(IOService *provider) {
++	if (!super::start(provider)) return false;
++	registerService();
++	return true;
++}
++
++void OncliteStorage::stop(IOService *provider) {
++	super::stop(provider);
++}
++
++bool OncliteStorage::read(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) {
++	// TODO: Implement eMMC read
++	return false;
++}
++
++bool OncliteStorage::write(uint64_t block, IOStorageExtent *extent, IOStorageClient *client) {
++	// TODO: Implement eMMC write
++	return false;
++}
++
++void OncliteStorage::getCapabilities(IOStorage::Capabilities &caps) {
++	memset(&caps, 0, sizeof(caps));
++	caps.version = kIOStorageCapabilitiesVersion1;
++	caps.read = 1;
++	caps.write = 1;
++	caps.totalBytes = 32ULL * 1024 * 1024 * 1024; // 32GB eMMC
++	caps.blockSize = 512;
++	caps.optimalIOSize = 4096;
++}
++
++OSDefineMetaClassAndStructors(OncliteStorage, IOStorage);
++#endif /* ONCLITE */
